@@ -275,10 +275,20 @@ class SettingsWindow(ctk.CTkToplevel):
             ("JPEG", "*.jpg *.jpeg"),
             ("Tous fichiers", "*.*"),
         ]
+        
+        # Temporairement cacher cette fenêtre pour que le dialogue soit au premier plan
+        self.withdraw()
+        
         filepath = filedialog.askopenfilename(
             title="Sélectionner un logo",
-            filetypes=filetypes
+            filetypes=filetypes,
+            parent=self.master  # Utiliser la fenêtre parente
         )
+        
+        # Réafficher la fenêtre des paramètres
+        self.deiconify()
+        self.lift()
+        self.focus_force()
         
         if filepath:
             try:
