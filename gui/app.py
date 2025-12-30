@@ -589,10 +589,13 @@ class GENDOCApp(ctk.CTk):
                 source_file=self.selected_file,
             )
 
-            # Mise à jour UI
-            self.progress.set((idx + 1) / total_groups)
-            self.output_preview.add_file(pdf_path, "facture", client_nom, totaux["total_ttc"])
-            self.log(f"✓ {invoice_number} → {client_nom}", "success")
+            # Mise à jour UI via after() pour thread-safety
+            progress_val = (idx + 1) / total_groups
+            self.after(0, lambda p=progress_val: self.progress.set(p))
+            self.after(0, lambda path=pdf_path, name=client_nom, ttc=totaux["total_ttc"]: 
+                       self.output_preview.add_file(path, "facture", name, ttc))
+            self.after(0, lambda num=invoice_number, nom=client_nom: 
+                       self.log(f"✓ {num} → {nom}", "success"))
 
     def _generate_payslips(self, df):
         """Génère les fiches de paie."""
@@ -625,11 +628,15 @@ class GENDOCApp(ctk.CTk):
                 cotisations=salaire_data["cotisations"],
             )
 
-            # Mise à jour UI
-            self.progress.set((idx + 1) / total)
+            # Mise à jour UI via after() pour thread-safety
+            progress_val = (idx + 1) / total
             name = f"{salarie_info['prenom']} {salarie_info['nom']}"
-            self.output_preview.add_file(pdf_path, "fiche_paie", name, salaire_data["salaire_net_avant_impot"])
-            self.log(f"✓ Fiche de paie → {name}", "success")
+            net = salaire_data["salaire_net_avant_impot"]
+            
+            self.after(0, lambda p=progress_val: self.progress.set(p))
+            self.after(0, lambda path=pdf_path, n=name, amount=net: 
+                       self.output_preview.add_file(path, "fiche_paie", n, amount))
+            self.after(0, lambda n=name: self.log(f"✓ Fiche de paie → {n}", "success"))
 
     def open_settings(self):
         """Ouvre la fenêtre des paramètres."""
