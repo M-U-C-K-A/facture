@@ -31,9 +31,18 @@ class SettingsWindow(ctk.CTkToplevel):
         
         # Centrer la fenêtre
         self.transient(parent)
-        self.grab_set()
         
         self._create_ui()
+        
+        # Attendre que la fenêtre soit visible avant grab_set
+        self.after(100, self._delayed_grab)
+    
+    def _delayed_grab(self):
+        """Appelé après que la fenêtre soit visible."""
+        try:
+            self.grab_set()
+        except Exception:
+            pass  # Ignorer si grab échoue
     
     def _load_settings(self) -> dict:
         """Charge les paramètres depuis le fichier JSON."""
