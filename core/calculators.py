@@ -23,6 +23,16 @@ class LigneFacture:
     prix_unitaire_ht: float
     taux_tva: float = 20.0
     remise_pourcent: float = 0.0
+    unite: str = ""  # Unité: "", "h" (heures), "j" (jours), "forfait", etc.
+
+    def __post_init__(self):
+        """Validation après initialisation."""
+        if self.quantite < 0:
+            raise ValueError(f"Quantité négative non autorisée: {self.quantite}")
+        if self.prix_unitaire_ht < 0:
+            raise ValueError(f"Prix unitaire négatif non autorisé: {self.prix_unitaire_ht}")
+        if not 0 <= self.taux_tva <= 100:
+            raise ValueError(f"Taux TVA invalide: {self.taux_tva}")
 
     @property
     def montant_ht(self) -> Decimal:
@@ -49,6 +59,7 @@ class LigneFacture:
         return {
             "designation": self.designation,
             "quantite": self.quantite,
+            "unite": self.unite,
             "prix_unitaire_ht": float(self.prix_unitaire_ht),
             "taux_tva": self.taux_tva,
             "remise_pourcent": self.remise_pourcent,
@@ -59,20 +70,22 @@ class LigneFacture:
 
 
 class CalculatorFacture:
-    """Calculatrice pour les factures."""
+    """Calculatrice pour les factures avec support multi-TVA et acomptes."""
 
-    def __init__(self, lignes: List[LigneFacture]):
+    def __init__(self, lignes: List[LigneFacture], acompte: float = 0.0):
         """
         Initialise la calculatrice avec les lignes de facture.
 
         Args:
             lignes: Liste des lignes de facture
+            acompte: Montant d'acompte déjà versé (déduit du total)
         """
         self.lignes = lignes
+        self.acompte = Decimal(str(acompte))
 
     @classmethod
     def from_dataframe(
-        cls, df: pd.DataFrame, taux_tva_defaut: float = 20.0
+        cls, df: pd.DataFrame, taux_tva_defaut: float = 20.0, acompte: float = 0.0
     ) -> "CalculatorFacture":
         """
         Crée une calculatrice à partir d'un DataFrame.
@@ -80,6 +93,7 @@ class CalculatorFacture:
         Args:
             df: DataFrame avec les colonnes de facture
             taux_tva_defaut: Taux de TVA par défaut si non spécifié
+            acompte: Acompte déjà versé
 
         Returns:
             Instance de CalculatorFacture
@@ -92,9 +106,10 @@ class CalculatorFacture:
                 prix_unitaire_ht=float(row.get("prix_unitaire_ht", 0)),
                 taux_tva=float(row.get("taux_tva", taux_tva_defaut)),
                 remise_pourcent=float(row.get("remise_pourcent", 0)),
+                unite=str(row.get("unite", "")),
             )
             lignes.append(ligne)
-        return cls(lignes)
+        return cls(lignes, acompte)
 
     @property
     def total_ht(self) -> Decimal:
@@ -112,6 +127,12 @@ class CalculatorFacture:
     def total_ttc(self) -> Decimal:
         """Calcule le total TTC."""
         return self.total_ht + self.total_tva
+
+    @property
+    def net_a_payer(self) -> Decimal:
+        """Calcule le net à payer après déduction de l'acompte."""
+        net = self.total_ttc - self.acompte
+        return net.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
     def get_tva_par_taux(self) -> Dict[float, Dict[str, Decimal]]:
         """
@@ -137,6 +158,8 @@ class CalculatorFacture:
             "total_ht": float(self.total_ht),
             "total_tva": float(self.total_tva),
             "total_ttc": float(self.total_ttc),
+            "acompte": float(self.acompte),
+            "net_a_payer": float(self.net_a_payer),
             "tva_par_taux": {
                 taux: {"base": float(vals["base"]), "tva": float(vals["tva"])}
                 for taux, vals in self.get_tva_par_taux().items()

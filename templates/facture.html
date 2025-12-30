@@ -77,7 +77,8 @@
                     {% for ligne in data.lignes %}
                     <tr>
                         <td class="col-designation">{{ ligne.designation }}</td>
-                        <td class="col-quantity">{{ ligne.quantite }}</td>
+                        <td class="col-quantity">{{ ligne.quantite }}{% if ligne.unite %} {{ ligne.unite }}{% endif %}
+                        </td>
                         <td class="col-unit-price">{{ ligne.prix_unitaire_ht | format_currency }}</td>
                         <td class="col-tva">{{ ligne.taux_tva }}%</td>
                         <td class="col-total">{{ ligne.montant_ht | format_currency }}</td>
@@ -100,9 +101,20 @@
                     <span class="value">{{ montants.tva | format_currency }}</span>
                 </div>
                 {% endfor %}
-                <div class="total-row total-final">
+                <div class="total-row">
                     <span class="label">Total TTC</span>
                     <span class="value">{{ data.totaux.total_ttc | format_currency }}</span>
+                </div>
+                {% if data.totaux.acompte and data.totaux.acompte > 0 %}
+                <div class="total-row acompte-row">
+                    <span class="label">Acompte versé</span>
+                    <span class="value">- {{ data.totaux.acompte | format_currency }}</span>
+                </div>
+                {% endif %}
+                <div class="total-row total-final">
+                    <span class="label">NET À PAYER</span>
+                    <span class="value">{{ data.totaux.net_a_payer | default(data.totaux.total_ttc) | format_currency
+                        }}</span>
                 </div>
             </div>
         </section>

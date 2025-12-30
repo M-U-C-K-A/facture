@@ -365,6 +365,16 @@ th.col-amount-employer {
     color: var(--color-primary);
 }
 
+/* Ligne d'acompte */
+.total-row.acompte-row {
+    color: var(--color-success);
+    font-style: italic;
+}
+
+.total-row.acompte-row .value {
+    color: var(--color-success);
+}
+
 /* =============================================
    QR CODE Section
    ============================================= */
