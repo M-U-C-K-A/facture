@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facture {{ data.numero }}</title>
+    <link rel="stylesheet" href="styles/document.css">
+</head>
+
+<body>
+    <div class="document facture">
+        <!-- En-tête avec logo et infos entreprise -->
+        <header class="document-header">
+            <div class="company-info">
+                {% if company.logo_path %}
+                <div class="logo">
+                    <img src="{{ company.logo_path }}" alt="{{ company.nom }}" onerror="this.style.display='none'">
+                </div>
+                {% endif %}
+                <div class="company-details">
+                    <h1 class="company-name">{{ company.nom }}</h1>
+                    <p>{{ company.adresse }}</p>
+                    <p>{{ company.code_postal }} {{ company.ville }}</p>
+                    <p>Tél : {{ company.telephone }}</p>
+                    <p>{{ company.email }}</p>
+                </div>
+            </div>
+            <div class="invoice-title">
+                <h2>FACTURE</h2>
+                <p class="invoice-number">N° {{ data.numero }}</p>
+            </div>
+        </header>
+
+        <!-- Informations de la facture -->
+        <section class="invoice-meta">
+            <div class="dates">
+                <div class="date-item">
+                    <span class="label">Date :</span>
+                    <span class="value">{{ data.date_facture | format_date }}</span>
+                </div>
+                {% if data.date_echeance %}
+                <div class="date-item">
+                    <span class="label">Échéance :</span>
+                    <span class="value">{{ data.date_echeance | format_date }}</span>
+                </div>
+                {% endif %}
+            </div>
+            <div class="client-info">
+                <h3>Facturé à</h3>
+                <div class="client-details">
+                    <p class="client-name"><strong>{{ data.client.nom }}</strong></p>
+                    <p>{{ data.client.adresse }}</p>
+                    {% if data.client.code_postal and data.client.ville %}
+                    <p>{{ data.client.code_postal }} {{ data.client.ville }}</p>
+                    {% endif %}
+                    {% if data.client.siret %}
+                    <p>SIRET : {{ data.client.siret | format_siret }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Tableau des prestations -->
+        <section class="invoice-items">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th class="col-designation">Désignation</th>
+                        <th class="col-quantity">Qté</th>
+                        <th class="col-unit-price">P.U. HT</th>
+                        <th class="col-tva">TVA</th>
+                        <th class="col-total">Total HT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ligne in data.lignes %}
+                    <tr>
+                        <td class="col-designation">{{ ligne.designation }}</td>
+                        <td class="col-quantity">{{ ligne.quantite }}</td>
+                        <td class="col-unit-price">{{ ligne.prix_unitaire_ht | format_currency }}</td>
+                        <td class="col-tva">{{ ligne.taux_tva }}%</td>
+                        <td class="col-total">{{ ligne.montant_ht | format_currency }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Totaux -->
+        <section class="invoice-totals">
+            <div class="totals-table">
+                <div class="total-row">
+                    <span class="label">Total HT</span>
+                    <span class="value">{{ data.totaux.total_ht | format_currency }}</span>
+                </div>
+                {% for taux, montants in data.totaux.tva_par_taux.items() %}
+                <div class="total-row tva-row">
+                    <span class="label">TVA {{ taux }}%</span>
+                    <span class="value">{{ montants.tva | format_currency }}</span>
+                </div>
+                {% endfor %}
+                <div class="total-row total-final">
+                    <span class="label">Total TTC</span>
+                    <span class="value">{{ data.totaux.total_ttc | format_currency }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- QR Code de paiement (si disponible) -->
+        {% if data.qr_code_path %}
+        <section class="qr-payment">
+            <div class="qr-code">
+                <img src="{{ data.qr_code_path }}" alt="QR Code paiement">
+            </div>
+            <div class="qr-info">
+                <strong>Paiement instantané</strong>
+                Scannez ce QR code avec votre application bancaire pour payer cette facture.
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Conditions de paiement -->
+        <section class="payment-terms">
+            <h4>Conditions de paiement</h4>
+            <p>{{ data.conditions_paiement | default('Paiement à 30 jours') }}</p>
+            {% if company.iban %}
+            <p><strong>IBAN :</strong> {{ company.iban }} {% if company.bic %}<strong>BIC :</strong> {{ company.bic }}{%
+                endif %}</p>
+            {% endif %}
+        </section>
+
+        <!-- Mentions légales -->
+        <footer class="legal-mentions">
+            <p>En cas de retard de paiement, pénalité de 3x le taux d'intérêt légal + indemnité forfaitaire de 40 €.</p>
+            {# Afficher Art. 293 B UNIQUEMENT si TVA = 0 #}
+            {% if data.totaux.total_tva == 0 %}
+            <p class="tva-mention">TVA non applicable, art. 293 B du CGI</p>
+            {% endif %}
+        </footer>
+
+        <!-- Pied de page centralisé -->
+        <div class="document-footer">
+            <p class="legal-line">{{ company.nom }} - SIRET {{ company.siret | format_siret }} - TVA {{
+                company.tva_intracom }}</p>
+            <p>{{ company.adresse }}, {{ company.code_postal }} {{ company.ville }}</p>
+            {% if company.capital %}
+            <p>Capital social : {{ company.capital }} € - RCS {{ company.rcs | default(company.ville) }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

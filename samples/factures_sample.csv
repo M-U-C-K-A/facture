@@ -1,0 +1,8 @@
+client_nom,client_adresse,client_code_postal,client_ville,client_siret,client_email,designation,quantite,prix_unitaire_ht,taux_tva,remise_pourcent
+"Société ABC","15 Avenue des Champs-Élysées","75008","Paris","12345678901234","contact@abc.fr","Développement site web vitrine",1,2500.00,20,0
+"Société ABC","15 Avenue des Champs-Élysées","75008","Paris","12345678901234","contact@abc.fr","Hébergement web annuel",1,180.00,20,0
+"Société ABC","15 Avenue des Champs-Élysées","75008","Paris","12345678901234","contact@abc.fr","Maintenance mensuelle (3 mois)",3,150.00,20,10
+"Entreprise XYZ","42 Rue du Commerce","69002","Lyon","98765432109876","info@xyz.com","Consulting stratégique",8,120.00,20,0
+"Entreprise XYZ","42 Rue du Commerce","69002","Lyon","98765432109876","info@xyz.com","Formation équipe",2,450.00,20,5
+"Studio Créatif","8 Place Bellecour","69002","Lyon","55566677788899","hello@studio.fr","Design logo + charte graphique",1,1800.00,20,0
+"Studio Créatif","8 Place Bellecour","69002","Lyon","55566677788899","hello@studio.fr","Déclinaisons supports print",1,600.00,20,0

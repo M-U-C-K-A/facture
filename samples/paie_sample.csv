@@ -1,0 +1,6 @@
+salarie_nom,salarie_prenom,salarie_matricule,poste,salaire_brut,date_embauche,heures_travaillees
+"Dupont","Jean","EMP001","Développeur Senior",3500.00,"2020-03-15",151.67
+"Martin","Marie","EMP002","Chef de Projet",4200.00,"2018-09-01",151.67
+"Bernard","Pierre","EMP003","Designer UX/UI",3200.00,"2022-01-10",151.67
+"Petit","Sophie","EMP004","Assistante Administrative",2400.00,"2021-06-20",151.67
+"Leroy","Thomas","EMP005","Commercial",3000.00,"2019-11-05",151.67

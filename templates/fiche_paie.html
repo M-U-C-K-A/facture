@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulletin de Salaire - {{ data.salarie.nom }} {{ data.salarie.prenom }}</title>
+    <link rel="stylesheet" href="styles/document.css">
+</head>
+
+<body>
+    <div class="document fiche-paie">
+        <!-- En-tête -->
+        <header class="document-header payslip-header">
+            <div class="company-info">
+                {% if company.logo_path %}
+                <div class="logo">
+                    <img src="{{ company.logo_path }}" alt="{{ company.nom }}" onerror="this.style.display='none'">
+                </div>
+                {% endif %}
+                <div class="company-details">
+                    <h1 class="company-name">{{ company.nom }}</h1>
+                    <p>{{ company.adresse }}</p>
+                    <p>{{ company.code_postal }} {{ company.ville }}</p>
+                    <p>SIRET : {{ company.siret | format_siret }}</p>
+                    <p>Tél : {{ company.telephone }}</p>
+                    <p>{{ company.email }}</p>
+                </div>
+            </div>
+            <div class="payslip-title">
+                <h2>BULLETIN DE SALAIRE</h2>
+                <p class="period">{{ data.periode }}</p>
+            </div>
+        </header>
+
+        <!-- Informations salarié -->
+        <section class="employee-info">
+            <div class="employee-details">
+                <h3>Salarié</h3>
+                <table class="info-table">
+                    <tr>
+                        <td class="label">Nom :</td>
+                        <td class="value"><strong>{{ data.salarie.nom }} {{ data.salarie.prenom }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Matricule :</td>
+                        <td class="value">{{ data.salarie.matricule | default('N/A') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Poste :</td>
+                        <td class="value">{{ data.salarie.poste }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Date d'entrée :</td>
+                        <td class="value">{{ data.salarie.date_embauche | format_date | default('N/A') }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="period-details">
+                <h3>Période</h3>
+                <table class="info-table">
+                    <tr>
+                        <td class="label">Mois :</td>
+                        <td class="value">{{ data.periode }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Heures :</td>
+                        <td class="value">{{ data.salaire.heures_travaillees | default('151,67') }} h</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Convention :</td>
+                        <td class="value">{{ data.convention | default('SYNTEC') }}</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Salaire brut -->
+        <section class="salary-section">
+            <div class="salary-header">
+                <span class="label">SALAIRE BRUT</span>
+                <span class="value">{{ data.salaire.salaire_brut | format_currency }}</span>
+            </div>
+        </section>
+
+        <!-- Tableau des cotisations -->
+        <section class="contributions-section">
+            <table class="contributions-table">
+                <thead>
+                    <tr>
+                        <th class="col-libelle">Cotisations</th>
+                        <th class="col-base">Base</th>
+                        <th class="col-rate-employee">Tx sal.</th>
+                        <th class="col-amount-employee">Part sal.</th>
+                        <th class="col-rate-employer">Tx emp.</th>
+                        <th class="col-amount-employer">Part emp.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cotisation in data.cotisations %}
+                    <tr>
+                        <td class="col-libelle">{{ cotisation.libelle }}</td>
+                        <td class="col-base">{{ cotisation.base | format_currency }}</td>
+                        <td class="col-rate-employee">{{ cotisation.taux_salarie }}%</td>
+                        <td class="col-amount-employee">{{ cotisation.part_salarie | format_currency }}</td>
+                        <td class="col-rate-employer">{{ cotisation.taux_employeur }}%</td>
+                        <td class="col-amount-employer">{{ cotisation.part_employeur | format_currency }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="totals-row">
+                        <td colspan="3" class="label">TOTAL COTISATIONS</td>
+                        <td class="col-amount-employee"><strong>{{ data.salaire.total_cotisations_salarie |
+                                format_currency }}</strong></td>
+                        <td></td>
+                        <td class="col-amount-employer"><strong>{{ data.salaire.total_cotisations_employeur |
+                                format_currency }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+
+        <!-- Récapitulatif -->
+        <section class="summary-section">
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <span class="label">Net avant impôt</span>
+                    <span class="value">{{ data.salaire.salaire_net_avant_impot | format_currency }}</span>
+                </div>
+                {% if data.salaire.impot_revenu %}
+                <div class="summary-item">
+                    <span class="label">Impôt sur le revenu (PAS)</span>
+                    <span class="value">- {{ data.salaire.impot_revenu | format_currency }}</span>
+                </div>
+                {% endif %}
+                <div class="summary-item net-to-pay">
+                    <span class="label">NET À PAYER</span>
+                    <span class="value">{{ data.salaire.salaire_net_a_payer |
+                        default(data.salaire.salaire_net_avant_impot) | format_currency }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Congés -->
+        {% if data.conges %}
+        <section class="conges-section">
+            <h4>Congés payés</h4>
+            <div class="conges-grid">
+                <div class="conges-item">
+                    <span class="label">Acquis</span>
+                    <span class="value">{{ data.conges.acquis | default(0) }} j</span>
+                </div>
+                <div class="conges-item">
+                    <span class="label">Pris</span>
+                    <span class="value">{{ data.conges.pris | default(0) }} j</span>
+                </div>
+                <div class="conges-item">
+                    <span class="label">Solde</span>
+                    <span class="value">{{ data.conges.solde | default(0) }} j</span>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Informations légales -->
+        <footer class="legal-mentions payslip-legal">
+            <p><strong>Conservez ce bulletin sans limitation de durée.</strong></p>
+            <p>Coût total employeur : {{ data.salaire.cout_total_employeur | format_currency }}</p>
+        </footer>
+
+        <!-- Pied de page -->
+        <div class="document-footer">
+            <p class="legal-line">{{ company.nom }} - SIRET {{ company.siret | format_siret }}</p>
+            <p>{{ company.adresse }}, {{ company.code_postal }} {{ company.ville }}</p>
+            {% if company.capital %}
+            <p>Capital : {{ company.capital }} € - RCS {{ company.rcs | default(company.ville) }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+# GEN-DOC - Git Ignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Databases
+*.db
+*.sqlite3
+
+# Output files
+output/*.pdf
+archives/*.zip
+exports/*.csv
+exports/*.txt
+
+# Logs
+*.log
+gendoc.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config local (ne pas partager les secrets)
+config/settings_local.py
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build
+dist/
+build/
+*.egg-info/

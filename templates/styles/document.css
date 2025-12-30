@@ -1,0 +1,636 @@
+/*
+ * GEN-DOC V2 - Styles optimisés pour PDF A4
+ * Compatible WeasyPrint - Rendu compact 1 page
+ */
+
+/* Import Google Fonts - Roboto (professionnel) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+/* Variables CSS */
+:root {
+    /* Couleurs principales */
+    --color-primary: #1e40af;
+    --color-primary-light: #3b82f6;
+    --color-primary-dark: #1e3a8a;
+
+    /* Couleurs secondaires */
+    --color-secondary: #64748b;
+    --color-accent: #0ea5e9;
+
+    /* Couleurs de base */
+    --color-text: #1f2937;
+    --color-text-light: #6b7280;
+    --color-text-muted: #9ca3af;
+
+    /* Arrière-plans */
+    --color-bg: #ffffff;
+    --color-bg-light: #f8fafc;
+    --color-bg-subtle: #f1f5f9;
+
+    /* Bordures */
+    --color-border: #e2e8f0;
+    --color-border-strong: #cbd5e1;
+
+    /* Statuts */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+
+    /* Typographie - Roboto */
+    --font-sans: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-mono: 'Roboto Mono', 'Consolas', monospace;
+
+    /* Espacements compacts */
+    --spacing-xs: 2px;
+    --spacing-sm: 4px;
+    --spacing-md: 8px;
+    --spacing-lg: 12px;
+    --spacing-xl: 16px;
+}
+
+/* Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Page A4 optimisée pour 1 page */
+@page {
+    size: A4;
+    margin: 10mm 12mm 15mm 12mm;
+
+    @bottom-center {
+        content: "";
+        font-size: 7pt;
+        color: #9ca3af;
+    }
+}
+
+html,
+body {
+    font-family: var(--font-sans);
+    font-size: 9pt;
+    line-height: 1.35;
+    color: var(--color-text);
+    background: var(--color-bg);
+}
+
+/* Document container */
+.document {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    background: var(--color-bg);
+}
+
+/* =============================================
+   EN-TÊTE COMPACT
+   ============================================= */
+
+.document-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.company-info {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+}
+
+.logo img {
+    max-width: 50px;
+    max-height: 50px;
+    object-fit: contain;
+}
+
+.company-details {
+    font-size: 8pt;
+    color: var(--color-text-light);
+    line-height: 1.3;
+}
+
+.company-name {
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 2px;
+}
+
+.company-details p {
+    margin: 1px 0;
+}
+
+.invoice-title,
+.payslip-title {
+    text-align: right;
+}
+
+.invoice-title h2,
+.payslip-title h2 {
+    font-size: 18pt;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.invoice-number,
+.period {
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+}
+
+/* =============================================
+   SECTION META (Dates + Client)
+   ============================================= */
+
+.invoice-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-xl);
+}
+
+.dates {
+    flex: 0 0 auto;
+}
+
+.date-item {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: 2px;
+    font-size: 8pt;
+}
+
+.date-item .label {
+    color: var(--color-text-light);
+}
+
+.date-item .value {
+    font-weight: 500;
+    font-family: var(--font-mono);
+}
+
+.client-info {
+    flex: 0 0 auto;
+    text-align: right;
+}
+
+.client-info h3 {
+    font-size: 8pt;
+    font-weight: 600;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.client-details {
+    background: var(--color-bg-subtle);
+    padding: var(--spacing-md);
+    border-radius: 4px;
+    border-left: 2px solid var(--color-primary);
+    font-size: 8pt;
+    line-height: 1.3;
+}
+
+.client-name {
+    font-size: 9pt;
+    color: var(--color-text);
+    margin-bottom: 2px;
+}
+
+.client-details p {
+    margin: 1px 0;
+    color: var(--color-text-light);
+}
+
+/* =============================================
+   TABLEAUX COMPACTS
+   ============================================= */
+
+.items-table,
+.contributions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--spacing-lg);
+    font-size: 8pt;
+}
+
+.items-table thead,
+.contributions-table thead {
+    background: var(--color-primary);
+    color: white;
+}
+
+.items-table th,
+.contributions-table th {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    font-size: 7pt;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.items-table td,
+.contributions-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+/* Colonnes numériques - ALIGNÉES À DROITE + pas de retour à la ligne */
+.col-quantity,
+.col-unit-price,
+.col-tva,
+.col-total,
+.col-base,
+.col-rate-employee,
+.col-amount-employee,
+.col-rate-employer,
+.col-amount-employer {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    white-space: nowrap;
+}
+
+/* En-têtes numériques aussi à droite */
+th.col-quantity,
+th.col-unit-price,
+th.col-tva,
+th.col-total,
+th.col-base,
+th.col-rate-employee,
+th.col-amount-employee,
+th.col-rate-employer,
+th.col-amount-employer {
+    text-align: right;
+}
+
+.col-designation,
+.col-libelle {
+    width: 40%;
+}
+
+/* Ligne de total cotisations */
+.contributions-table tfoot .totals-row {
+    background: var(--color-bg-subtle);
+    font-weight: 600;
+}
+
+.contributions-table tfoot td {
+    padding: var(--spacing-md);
+    border-top: 2px solid var(--color-primary);
+}
+
+/* =============================================
+   TOTAUX FACTURE
+   ============================================= */
+
+.invoice-totals {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--spacing-lg);
+}
+
+.totals-table {
+    min-width: 220px;
+    background: var(--color-bg-subtle);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    font-size: 9pt;
+}
+
+.total-row .label {
+    color: var(--color-text-light);
+}
+
+.total-row .value {
+    font-weight: 500;
+    font-family: var(--font-mono);
+    text-align: right;
+    white-space: nowrap;
+}
+
+.total-row.tva-row {
+    font-size: 8pt;
+    color: var(--color-text-light);
+}
+
+.total-row.total-final {
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-md);
+    border-top: 2px solid var(--color-primary);
+    font-size: 11pt;
+    font-weight: 700;
+}
+
+.total-row.total-final .label,
+.total-row.total-final .value {
+    color: var(--color-primary);
+}
+
+/* =============================================
+   QR CODE Section
+   ============================================= */
+
+.qr-payment {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.qr-code img {
+    width: 80px;
+    height: 80px;
+}
+
+.qr-info {
+    font-size: 8pt;
+    color: var(--color-text-light);
+}
+
+.qr-info strong {
+    display: block;
+    font-size: 9pt;
+    color: var(--color-text);
+    margin-bottom: 2px;
+}
+
+/* =============================================
+   SECTION SALAIRE (FICHE DE PAIE)
+   ============================================= */
+
+.salary-section,
+.summary-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.salary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--color-primary);
+    color: white;
+    border-radius: 6px;
+    font-size: 10pt;
+    font-weight: 600;
+}
+
+.salary-header .value {
+    font-family: var(--font-mono);
+    font-size: 12pt;
+    white-space: nowrap;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--color-bg-subtle);
+    border-radius: 4px;
+    border-left: 2px solid var(--color-secondary);
+    font-size: 9pt;
+}
+
+.summary-item .value {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.summary-item.net-to-pay {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    border: none;
+    padding: var(--spacing-lg);
+}
+
+.summary-item.net-to-pay .label {
+    font-size: 10pt;
+    font-weight: 600;
+}
+
+.summary-item.net-to-pay .value {
+    font-size: 14pt;
+    font-weight: 700;
+}
+
+/* Section congés */
+.conges-section {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--color-bg-light);
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+}
+
+.conges-section h4 {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.conges-grid {
+    display: flex;
+    gap: var(--spacing-xl);
+}
+
+.conges-item {
+    text-align: center;
+}
+
+.conges-item .label {
+    font-size: 7pt;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+}
+
+.conges-item .value {
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+}
+
+/* =============================================
+   SECTION EMPLOYÉ COMPACT
+   ============================================= */
+
+.employee-info {
+    display: flex;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--color-bg-subtle);
+    border-radius: 6px;
+}
+
+.employee-details,
+.period-details {
+    flex: 1;
+}
+
+.employee-info h3 {
+    font-size: 8pt;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.info-table {
+    width: 100%;
+    font-size: 8pt;
+}
+
+.info-table td {
+    padding: 2px 0;
+}
+
+.info-table .label {
+    color: var(--color-text-light);
+    width: 45%;
+}
+
+.info-table .value {
+    color: var(--color-text);
+}
+
+/* =============================================
+   CONDITIONS DE PAIEMENT
+   ============================================= */
+
+.payment-terms {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--color-bg-light);
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+}
+
+.payment-terms h4 {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.payment-terms p {
+    font-size: 8pt;
+    color: var(--color-text-light);
+    margin: 2px 0;
+}
+
+/* =============================================
+   MENTIONS LÉGALES COMPACTES
+   ============================================= */
+
+.legal-mentions {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--color-bg-subtle);
+    border-radius: 4px;
+    font-size: 7pt;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+.legal-mentions p {
+    margin: 2px 0;
+}
+
+.tva-mention {
+    font-style: italic;
+}
+
+.payslip-legal {
+    text-align: center;
+}
+
+.payslip-legal p:first-child {
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+/* =============================================
+   PIED DE PAGE CENTRALISÉ
+   ============================================= */
+
+.document-footer {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    font-size: 7pt;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+.document-footer p {
+    margin: 1px 0;
+}
+
+.document-footer .legal-line {
+    font-weight: 500;
+}
+
+/* =============================================
+   UTILITAIRES IMPRESSION
+   ============================================= */
+
+@media print {
+    .document {
+        padding: 0;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    /* Éviter les coupures */
+    table,
+    .totals-table,
+    .payment-terms,
+    .legal-mentions {
+        page-break-inside: avoid;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+}

@@ -1,0 +1,23 @@
+# GEN-DOC V2 - Dépendances Python
+
+# Moteur de données
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Moteur de templating
+Jinja2>=3.1.0
+
+# Générateur PDF
+weasyprint>=60.0
+
+# Interface graphique
+customtkinter>=5.2.0
+
+# QR Code EPC
+qrcode[pil]>=7.4
+
+# Utilitaires
+python-dateutil>=2.8.0
+
+# Tests
+pytest>=7.0.0
