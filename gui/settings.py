@@ -263,26 +263,66 @@ class SettingsWindow(ctk.CTkToplevel):
         """Retourne le statut du logo."""
         logo_path = LOGO_DIR / "logo.png"
         if logo_path.exists():
-            return f"✅ Logo installé : {logo_path.name}"
+            size = logo_path.stat().st_size // 1024
+            return f"✅ Logo installé ({size} Ko)"
         return "❌ Aucun logo"
     
     def _import_logo(self):
         """Importe un logo."""
         filetypes = [
-            ("Images", "*.png *.jpg *.jpeg *.svg"),
+            ("Images", "*.png *.jpg *.jpeg *.gif *.bmp *.webp"),
             ("PNG", "*.png"),
             ("JPEG", "*.jpg *.jpeg"),
+            ("Tous fichiers", "*.*"),
         ]
-        filepath = filedialog.askopenfilename(filetypes=filetypes)
+        filepath = filedialog.askopenfilename(
+            title="Sélectionner un logo",
+            filetypes=filetypes
+        )
         
         if filepath:
             try:
+                from PIL import Image
+                
                 LOGO_DIR.mkdir(parents=True, exist_ok=True)
                 dest = LOGO_DIR / "logo.png"
-                shutil.copy(filepath, dest)
+                
+                # Ouvrir et convertir en PNG
+                img = Image.open(filepath)
+                
+                # Redimensionner si trop grand (max 200px)
+                max_size = 200
+                if img.width > max_size or img.height > max_size:
+                    img.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
+                
+                # Convertir en RGB si nécessaire (pour les images avec transparence)
+                if img.mode in ('RGBA', 'LA', 'P'):
+                    # Garder la transparence pour PNG
+                    img.save(dest, "PNG")
+                else:
+                    img = img.convert('RGB')
+                    img.save(dest, "PNG")
+                
                 self.logo_label.configure(text=self._get_logo_status())
                 self.settings["logo_path"] = str(dest)
-                messagebox.showinfo("Succès", "Logo importé avec succès !")
+                
+                messagebox.showinfo(
+                    "Succès", 
+                    f"Logo importé avec succès !\nTaille: {img.width}x{img.height}px"
+                )
+                
+            except ImportError:
+                # Fallback si PIL n'est pas installé - copie simple
+                try:
+                    LOGO_DIR.mkdir(parents=True, exist_ok=True)
+                    dest = LOGO_DIR / "logo.png"
+                    shutil.copy(filepath, dest)
+                    self.logo_label.configure(text=self._get_logo_status())
+                    self.settings["logo_path"] = str(dest)
+                    messagebox.showinfo("Succès", "Logo importé avec succès !")
+                except Exception as e:
+                    messagebox.showerror("Erreur", f"Impossible d'importer le logo : {e}")
+                    
             except Exception as e:
                 messagebox.showerror("Erreur", f"Impossible d'importer le logo : {e}")
     
@@ -290,10 +330,15 @@ class SettingsWindow(ctk.CTkToplevel):
         """Supprime le logo."""
         logo_path = LOGO_DIR / "logo.png"
         if logo_path.exists():
-            logo_path.unlink()
-            self.logo_label.configure(text=self._get_logo_status())
-            self.settings["logo_path"] = ""
-            messagebox.showinfo("Succès", "Logo supprimé")
+            try:
+                logo_path.unlink()
+                self.logo_label.configure(text=self._get_logo_status())
+                self.settings["logo_path"] = ""
+                messagebox.showinfo("Succès", "Logo supprimé")
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Impossible de supprimer : {e}")
+        else:
+            messagebox.showinfo("Info", "Aucun logo à supprimer")
     
     def _on_save(self):
         """Sauvegarde les paramètres."""
