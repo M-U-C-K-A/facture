@@ -128,6 +128,11 @@
                     <span class="label">Net avant impôt</span>
                     <span class="value">{{ data.salaire.salaire_net_avant_impot | format_currency }}</span>
                 </div>
+                <!-- Montant Net Social (obligatoire depuis 2023) -->
+                <div class="summary-item net-social">
+                    <span class="label">Montant Net Social</span>
+                    <span class="value">{{ data.salaire.montant_net_social | format_currency }}</span>
+                </div>
                 {% if data.salaire.impot_revenu %}
                 <div class="summary-item">
                     <span class="label">Impôt sur le revenu (PAS)</span>

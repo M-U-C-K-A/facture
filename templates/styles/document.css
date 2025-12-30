@@ -1,10 +1,10 @@
 /*
- * GEN-DOC V2 - Styles optimisés pour PDF A4
+ * GEN-DOC V3 - Styles optimisés pour PDF A4
  * Compatible WeasyPrint - Rendu compact 1 page
  */
 
-/* Import Google Fonts - Roboto (professionnel) */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+/* Import Google Fonts - Inter (moderne et professionnel) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* Variables CSS */
 :root {
@@ -36,9 +36,9 @@
     --color-warning: #f59e0b;
     --color-error: #ef4444;
 
-    /* Typographie - Roboto */
-    --font-sans: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    --font-mono: 'Roboto Mono', 'Consolas', monospace;
+    /* Typographie - Inter (plus moderne que Roboto) */
+    --font-sans: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Consolas', monospace;
 
     /* Espacements compacts */
     --spacing-xs: 2px;
@@ -463,6 +463,18 @@ th.col-amount-employer {
 .summary-item.net-to-pay .value {
     font-size: 14pt;
     font-weight: 700;
+}
+
+/* Montant Net Social (obligatoire depuis 2023) */
+.summary-item.net-social {
+    border-left: 3px solid var(--color-success);
+    background: #ecfdf5;
+}
+
+.summary-item.net-social .label::after {
+    content: " *";
+    color: var(--color-success);
+    font-size: 8pt;
 }
 
 /* Section congés */

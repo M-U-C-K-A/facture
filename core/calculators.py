@@ -246,6 +246,23 @@ class CalculatorPaie:
         return net.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
     @property
+    def montant_net_social(self) -> Decimal:
+        """
+        Calcule le Montant Net Social (MNS).
+        Obligatoire sur les bulletins depuis juillet 2023.
+        = Salaire brut - cotisations sociales obligatoires (hors CSG/CRDS non déductibles)
+        """
+        # Cotisations qui réduisent le net social
+        cotisations_net_social = Decimal("0")
+        for c in self.cotisations:
+            # Exclure CSG non déductible et CRDS du calcul
+            if "non déductible" not in c.libelle.lower() and "crds" not in c.libelle.lower():
+                cotisations_net_social += c.part_salarie
+        
+        mns = self.salaire_brut - cotisations_net_social
+        return mns.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+
+    @property
     def cout_total_employeur(self) -> Decimal:
         """Calcule le coût total pour l'employeur."""
         cout = self.salaire_brut + self.total_cotisations_employeur
@@ -260,6 +277,7 @@ class CalculatorPaie:
             "total_cotisations_salarie": float(self.total_cotisations_salarie),
             "total_cotisations_employeur": float(self.total_cotisations_employeur),
             "salaire_net_avant_impot": float(self.salaire_net_avant_impot),
+            "montant_net_social": float(self.montant_net_social),
             "cout_total_employeur": float(self.cout_total_employeur),
         }
 
