@@ -250,6 +250,23 @@ body {
     vertical-align: middle;
 }
 
+/* Zebra stripes - lignes alternées */
+.items-table tbody tr:nth-child(even),
+.contributions-table tbody tr:nth-child(even) {
+    background: var(--color-bg-light);
+}
+
+.items-table tbody tr:nth-child(odd),
+.contributions-table tbody tr:nth-child(odd) {
+    background: var(--color-bg);
+}
+
+/* Éviter les coupures de page dans les tableaux */
+.items-table,
+.contributions-table {
+    page-break-inside: avoid;
+}
+
 /* Colonnes numériques - ALIGNÉES À DROITE + pas de retour à la ligne */
 .col-quantity,
 .col-unit-price,

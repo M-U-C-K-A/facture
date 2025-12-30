@@ -168,6 +168,7 @@ class InvoiceGenerator(PDFGenerator):
         date_facture: Optional[datetime] = None,
         date_echeance: Optional[datetime] = None,
         conditions_paiement: str = "Paiement à 30 jours",
+        generate_qr: bool = True,
         **kwargs,
     ) -> Path:
         """
@@ -181,10 +182,31 @@ class InvoiceGenerator(PDFGenerator):
             date_facture: Date de la facture
             date_echeance: Date d'échéance
             conditions_paiement: Conditions de paiement
+            generate_qr: Générer le QR Code de paiement
 
         Returns:
             Chemin vers le PDF généré
         """
+        # Générer le QR Code si demandé et IBAN disponible
+        qr_code_path = None
+        if generate_qr and COMPANY_INFO.get("iban"):
+            try:
+                from core.qr_generator import generate_payment_qr
+                
+                qr_output = OUTPUT_DIR / f"qr_{invoice_number}.png"
+                qr_code_path = generate_payment_qr(
+                    beneficiary_name=COMPANY_INFO.get("nom", ""),
+                    iban=COMPANY_INFO.get("iban", ""),
+                    amount=float(totaux.get("total_ttc", 0)),
+                    reference=invoice_number,
+                    bic=COMPANY_INFO.get("bic", ""),
+                    output_path=qr_output,
+                )
+                if qr_code_path:
+                    qr_code_path = str(qr_code_path)
+            except Exception as e:
+                logger.warning(f"QR Code non généré: {e}")
+        
         data = {
             "numero": invoice_number,
             "client": client_info,
@@ -193,6 +215,7 @@ class InvoiceGenerator(PDFGenerator):
             "date_facture": date_facture or datetime.now(),
             "date_echeance": date_echeance,
             "conditions_paiement": conditions_paiement,
+            "qr_code_path": qr_code_path,
             **kwargs,
         }
 
