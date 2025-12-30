@@ -23,6 +23,7 @@ from core.calculators import CalculatorFacture, CalculatorPaie
 from core.pdf_generator import InvoiceGenerator, PayslipGenerator
 from database.logs import get_next_invoice_number, log_document, get_db_manager
 from config.settings import COMPANY_INFO, OUTPUT_DIR
+from gui.settings import SettingsWindow, get_company_info
 
 logger = logging.getLogger("GEN-DOC.GUI")
 
@@ -300,6 +301,18 @@ class GENDOCApp(ctk.CTk):
             font=ctk.CTkFont(size=12),
             text_color=("gray50", "gray60"),
         ).pack(side="left", padx=10)
+
+        # Bouton Settings
+        self.btn_settings = ctk.CTkButton(
+            header,
+            text="⚙️ Paramètres",
+            command=self.open_settings,
+            width=120,
+            height=35,
+            fg_color="transparent",
+            border_width=1,
+        )
+        self.btn_settings.pack(side="right", padx=20, pady=10)
 
     def _create_left_panel(self):
         """Panneau de contrôle gauche."""
@@ -618,6 +631,13 @@ class GENDOCApp(ctk.CTk):
             self.output_preview.add_file(pdf_path, "fiche_paie", name, salaire_data["salaire_net_avant_impot"])
             self.log(f"✓ Fiche de paie → {name}", "success")
 
+    def open_settings(self):
+        """Ouvre la fenêtre des paramètres."""
+        SettingsWindow(self, on_save_callback=self._on_settings_saved)
+    
+    def _on_settings_saved(self, settings):
+        """Appelé quand les paramètres sont sauvegardés."""
+        self.log("Paramètres mis à jour", "success")
 
 def run_app():
     """Lance l'application."""
